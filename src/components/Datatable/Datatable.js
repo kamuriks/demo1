@@ -5,13 +5,10 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 class Datatable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      posts: [],
-      users: []
-    };
-  }
+  state = {
+    users: [],
+    posts: []
+  };
 
   componentDidMount() {
     axios.get("https://jsonplaceholder.typicode.com/posts").then(res => {
@@ -38,11 +35,12 @@ class Datatable extends Component {
           return <input type="checkbox" />;
         },
         sortable: false,
-        width: 40
+        width: 25
       },
       {
         Header: "ID",
-        accessor: "id"
+        accessor: "id",
+        width: 30
       },
       {
         Header: "Username",
@@ -66,11 +64,29 @@ class Datatable extends Component {
       },
       {
         Header: "Company",
-        accessor: "company"
+        accessor: "company",
+        Cell: props => {
+          return (
+            <span>
+              {" "}
+              {props.row.company.bs} - {props.row.company.catchPhrase} -{" "}
+              {props.row.company.name}{" "}
+            </span>
+          );
+        }
       },
       {
         Header: "Address",
-        accessor: "address"
+        accessor: "address",
+        Cell: props => {
+          return (
+            <span>
+              {props.row.address.city} - {props.row.address.street} -{" "}
+              {props.row.address.suite} - {props.row.address.zipcode} -{" "}
+              {props.row.address.geo.lat} - {props.row.address.geo.lng}
+            </span>
+          );
+        }
       }
     ];
 
@@ -80,9 +96,7 @@ class Datatable extends Component {
         columns={columns}
         showPagination={false}
         defaultPageSize={10}
-        data={this.state.users.map(userdata => {
-          return { userdata };
-        })}
+        data={this.state.users}
       />
     );
   }

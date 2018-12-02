@@ -1,0 +1,32 @@
+header {
+  box-sizing: border-box;
+  padding: 2px;
+  background-color: rgb(80, 79, 79);
+  color: whitesmoke;
+  box-shadow: 0 1px gray;
+  text-align: center;
+  border: 1px rgb(102, 99, 99);
+  font-size: 22px;
+}
+.div1 {
+  box-sizing: border-box;
+  border: 1px solid gray;
+  box-shadow: 0 1px 1px black;
+  float: left;
+  width: 75%;
+  padding: 1px;
+}
+.div2 {
+  box-sizing: border-box;
+  border: 1px solid gray;
+  box-shadow: 0 1px 1px black;
+  float: left;
+  width: 25%;
+  padding: 1px;
+}
+@media (max-width: 600px) {
+  section {
+    width: auto;
+    height: auto;
+  }
+}

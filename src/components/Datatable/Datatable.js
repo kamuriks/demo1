@@ -3,11 +3,15 @@ import axios from "axios";
 import "./Datatable.css";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import checkboxHOC from "react-table/lib/hoc/selectTable";
+
+const CheckboxTable = checkboxHOC(ReactTable);
 
 class Datatable extends Component {
   state = {
     users: [],
-    posts: []
+    posts: [],
+    selection: []
   };
 
   componentDidMount() {
@@ -23,24 +27,59 @@ class Datatable extends Component {
     });
   }
 
+  toggleSelection = (key, shift, row) => {
+    let selection = [...this.state.selection];
+    const keyIndex = selection.indexOf(key);
+
+    if (keyIndex >= 0) {
+      selection = [
+        ...selection.slice(0, keyIndex),
+        ...selection.slice(keyIndex + 1)
+      ];
+    } else {
+      selection.push(key);
+    }
+
+    this.setState({ selection });
+  };
+
+  toggleAll = () => {
+    const selectAll = this.state.selectAll ? false : true;
+
+    const selection = [];
+
+    if (selectAll) {
+      const wrappedInstance = this.checkboxTable.getWrappedInstance();
+
+      const currentRecords = wrappedInstance.getResolvedState().sortedData;
+
+      currentRecords.forEach(item => {
+        selection.push(item._original.id);
+      });
+    }
+    this.setState({ selectAll, selection });
+  };
+
+  isSelected = key => {
+    return this.state.selection.includes(key);
+  };
+
   render() {
+    const { toggleSelection, toggleAll, isSelected } = this;
+    const { selectAll } = this.state;
+    const checkboxProps = {
+      selectAll,
+      isSelected,
+      toggleSelection,
+      toggleAll,
+      selectType: "checkbox"
+    };
+
     const columns = [
-      {
-        id: "checkbox",
-        accessor: "",
-        Cell: ({ original }) => {
-          return <input type="checkbox" />;
-        },
-        Header: x => {
-          return <input type="checkbox" />;
-        },
-        sortable: false,
-        width: 25
-      },
       {
         Header: "ID",
         accessor: "id",
-        width: 30
+        width: 40
       },
       {
         Header: "Username",
@@ -91,13 +130,19 @@ class Datatable extends Component {
     ];
 
     return (
-      <ReactTable
-        key={this.state.users.id}
-        columns={columns}
-        showPagination={false}
-        defaultPageSize={10}
-        data={this.state.users}
-      />
+      <div>
+        <CheckboxTable
+          ref={r => (this.checkboxTable = r)}
+          keyField="id"
+          className="-striped -highlight"
+          key={this.state.users.id}
+          columns={columns}
+          showPagination={false}
+          defaultPageSize={10}
+          data={this.state.users}
+          {...checkboxProps}
+        />
+      </div>
     );
   }
 }

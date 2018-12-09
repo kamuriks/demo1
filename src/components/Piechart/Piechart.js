@@ -9,14 +9,7 @@ const Piechart = props => {
         height={"400px"}
         chartType="PieChart"
         loader={<div>Loading Chart</div>}
-        data={[
-          ["Task", "Hours per Day"],
-          ["Work", 11],
-          ["Eat", 2],
-          ["Commute", 2],
-          ["Watch TV", 2],
-          ["Sleep", 7]
-        ]}
+        data={props.data}
         options={{
           title: "Posts Percentage",
           is3D: true

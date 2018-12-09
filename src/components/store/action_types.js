@@ -1,0 +1,11 @@
+export const FETCH_USERS = "FETCH_USERS";
+export const FETCH_POSTS = "FETCH_POSTS";
+export const SELECT_ONE_USER = "SELECT_ONE_USER";
+export const ADD_MARKERS = "ADD_MARKERS";
+export const ADD_ALL_MARKERS = "ADD_ALL_MARKERS";
+export const REMOVE_MARKERS = "REMOVE_MARKERS";
+export const REMOVE_ALL_MARKERS = "REMOVE_ALL_MARKERS";
+export const ADD_PIE = "ADD_PIE";
+export const ADD_ALL_PIE = "ADD_ALL_PIE";
+export const REMOVE_PIE = "REMOVE_PIE";
+export const REMOVE_ALL_PIE = "REMOVE_ALL_PIE";

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
-import "./Datatable.css";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
@@ -9,34 +7,24 @@ const CheckboxTable = checkboxHOC(ReactTable);
 
 class Datatable extends Component {
   state = {
-    users: [],
-    posts: [],
     selection: []
   };
 
-  componentDidMount() {
-    axios.get("https://jsonplaceholder.typicode.com/posts").then(res => {
-      this.setState({
-        posts: res.data
-      });
-    });
-    axios.get("https://jsonplaceholder.typicode.com/users").then(response => {
-      this.setState({
-        users: response.data
-      });
-    });
-  }
-
-  toggleSelection = (key, shift, row) => {
+  toggleSelection = key => {
     let selection = [...this.state.selection];
     const keyIndex = selection.indexOf(key);
+    const user = this.props.users[key - 1];
 
     if (keyIndex >= 0) {
       selection = [
         ...selection.slice(0, keyIndex),
         ...selection.slice(keyIndex + 1)
       ];
+      this.props.removeMarkers(user.id);
+      this.props.removePie(user.id);
     } else {
+      this.props.addPie(user.name, user.id);
+      this.props.addMarkers({ ...user.address.geo, userId: user.id });
       selection.push(key);
     }
 
@@ -56,6 +44,11 @@ class Datatable extends Component {
       currentRecords.forEach(item => {
         selection.push(item._original.id);
       });
+      this.props.addAllMarkers();
+      this.props.addAllPie();
+    } else {
+      this.props.removeAllMarkers();
+      this.props.removeAllPie();
     }
     this.setState({ selectAll, selection });
   };
@@ -67,6 +60,7 @@ class Datatable extends Component {
   render() {
     const { toggleSelection, toggleAll, isSelected } = this;
     const { selectAll } = this.state;
+
     const checkboxProps = {
       selectAll,
       isSelected,
@@ -130,19 +124,17 @@ class Datatable extends Component {
     ];
 
     return (
-      <div>
-        <CheckboxTable
-          ref={r => (this.checkboxTable = r)}
-          keyField="id"
-          className="-striped -highlight"
-          key={this.state.users.id}
-          columns={columns}
-          showPagination={false}
-          defaultPageSize={10}
-          data={this.state.users}
-          {...checkboxProps}
-        />
-      </div>
+      <CheckboxTable
+        ref={r => (this.checkboxTable = r)}
+        keyField="id"
+        className="-striped -highlight"
+        key={this.props.users.id}
+        columns={columns}
+        showPagination={false}
+        defaultPageSize={10}
+        data={this.props.users}
+        {...checkboxProps}
+      />
     );
   }
 }
